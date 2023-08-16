@@ -50,7 +50,7 @@ class Piklist_Shortcode
     ,'field_description_wrapper'
     ,'field_description'
   );
-  
+
   /**
    * @var bool Flag whether or not the content field has been rendered.
    * @access private
@@ -83,7 +83,7 @@ class Piklist_Shortcode
     add_filter('piklist_assets_localize', array('piklist_shortcode', 'assets_localize'));
     add_filter('piklist_pre_render_field_shortcode_data_content', array('piklist_shortcode', 'set_content_field'));
   }
-  
+
   /**
    * admin_init
    * Setup editor to support the ui.
@@ -98,7 +98,7 @@ class Piklist_Shortcode
     add_filter('tiny_mce_before_init', array('piklist_shortcode', 'tiny_mce_before_init'));
     add_filter('mce_external_plugins', array('piklist_shortcode', 'mce_external_plugins'), 100);
   }
-  
+
   /**
    * admin_pages
    * Add the page that will contain all the forms.
@@ -229,18 +229,18 @@ class Piklist_Shortcode
    * @param array $arguments The part object.
    * @param string $content The content of the shortcode.
    * @param string $tag The shortcode tag.
-   * 
+   *
    * @access public
    * @static
    * @since 1.0
    */
-  public static function shortcode($attributes, $content = '', $tag)
+  public static function shortcode($attributes, $content, $tag)
   {
     if (self::$shortcodes[$tag])
     {
       if (!empty($attributes))
       {
-          
+
           foreach ($attributes as $attribute => $attribute_value)
           {
             if (stristr($attribute_value, '%'))
@@ -251,16 +251,16 @@ class Piklist_Shortcode
       }
 
       ob_start();
-      
+
       do_action('piklist_pre_render_shortcode', $attributes, self::$shortcodes[$tag]);
 
       if (self::$shortcodes[$tag]['render'])
       {
-        if (isset($attributes['content'])) 
+        if (isset($attributes['content']))
         {
           $attributes['content'] = $content;
         }
-        
+
         foreach (self::$shortcodes[$tag]['render'] as $render)
         {
           if (is_array($render))
@@ -325,7 +325,7 @@ class Piklist_Shortcode
     }
 
     self::$editor_current = $editor_id;
-    
+
     return $settings;
   }
 
@@ -372,7 +372,7 @@ class Piklist_Shortcode
     {
       $plugins['piklist_shortcode'] = piklist::$add_ons['piklist']['url'] . '/parts/js/tinymce-shortcode.js';
     }
-    
+
     return $plugins;
   }
 
@@ -463,7 +463,7 @@ class Piklist_Shortcode
     }
 
     $shortcodes = piklist::get_settings('piklist_core', 'shortcode_ui');
-    
+
     if ($shortcodes)
     {
       foreach ($shortcodes as $data)
@@ -471,15 +471,15 @@ class Piklist_Shortcode
         $shortcode = $data['tag'];
         $options = is_array($data['options']) ? $data['options'] : array($data['options']);
         $preview = in_array('preview', $options);
-        
+
         if (!empty($shortcode) && isset(self::$shortcodes[$shortcode]))
         {
           self::$shortcodes[$shortcode]['data']['preview'] = $preview;
-       
+
           $localize['shortcodes'][$shortcode]['preview'] = $preview;
         }
         else
-        { 
+        {
           $localize['shortcodes'][$shortcode] = array(
             'name' => piklist::humanize($shortcode)
             ,'description' => __('Click on this box to edit the shortcode properties.', 'piklist')
@@ -490,7 +490,7 @@ class Piklist_Shortcode
         }
       }
     }
-    
+
     return $localize;
   }
 
@@ -571,7 +571,7 @@ class Piklist_Shortcode
       ,'html' => $output
     ));
   }
-  
+
   /**
    * set_content
    * Allow the form to set the content field.
@@ -585,13 +585,13 @@ class Piklist_Shortcode
     if (!self::$content_field_set)
     {
       self::$content_field_set = true;
-      
+
       return $field;
     }
-    
+
     return null;
   }
-  
+
   /**
    * admin_body_class
    * Add custom classes to the admin body tag.
@@ -610,10 +610,10 @@ class Piklist_Shortcode
     {
       $classes .= ' shortcode_editor-' . esc_attr($_REQUEST[piklist::$prefix . 'shortcode_data']['name']);
     }
-    
+
     return $classes;
   }
-  
+
   /**
   * parse
   * Parses a string for shortcodes
@@ -626,13 +626,13 @@ class Piklist_Shortcode
   * @static
   * @since 1.0
   */
-  public static function parse($string) 
+  public static function parse($string)
   {
     $shortcodes = array();
 
     preg_match_all("/(?P<shortcode>(?:(?:\\s?\\[))(?P<name>[\\w\\-]{3,})(?:\\s(?P<attributes>[\\w\\d,\\s=\\\"\\'\\-\\+\\#\\%\\!\\~\\`\\&\\.\\s\\:\\/\\?\\|]+))?(?:\\])(?:(?P<content>[\\w\\d\\,\\!\\@\\#\\$\\%\\^\\&\\*\\(\\\\)\\s\\=\\\"\\'\\-\\+\\&\\.\\s\\:\\/\\?\\|\\<\\>]+)(?:\\[\\/[\\w\\-\\_]+\\]))?)/u", $string, $found, PREG_SET_ORDER);
 
-    foreach ($found as $data) 
+    foreach ($found as $data)
     {
       $shortcode = array(
         'name' => $data['name']
@@ -640,17 +640,17 @@ class Piklist_Shortcode
         ,'content' => $data['content']
         ,'shortcode' => $data['shortcode']
       );
-    
-      if (isset($data['attributes'])) 
+
+      if (isset($data['attributes']))
       {
         preg_match_all("/(?<attribute>\\S+)=[\"']?(?P<value>(?:.(?![\"']?\\s+(?:\\S+)=|[>\"']))+.)[\"']?/u", $data['attributes'], $attributes, PREG_SET_ORDER);
 
-        foreach ($attributes as $attribute) 
+        foreach ($attributes as $attribute)
         {
           $shortcode['attributes'][$attribute['attribute']] = $attribute['value'];
         }
       }
-      
+
       array_push($shortcodes, $shortcode);
     }
 

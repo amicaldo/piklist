@@ -1025,7 +1025,7 @@ class Piklist
    * @static
    * @since 1.0
    */
-  public static function get_file_data($file = null, $data)
+  public static function get_file_data($file, $data)
   {
     if (!is_null($file))
     {
@@ -2392,7 +2392,7 @@ class Piklist
    */
   public static function sort_by_data_extend($a, $b)
   {
-    return empty($b['data']['extend']);
+    return empty($b['data']['extend']) ? 1 : 0;
   }
 
   /**

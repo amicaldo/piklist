@@ -2286,7 +2286,7 @@ class Piklist_Form
    * @static
    * @since 1.0
    */
-  public static function update_fields_data($fields_data, $field, $field_name = null, $attribute, $value, $merge = false)
+  public static function update_fields_data($fields_data, $field, $field_name, $attribute, $value, $merge = false)
   {
     if ((!$field['scope'] && isset($fields_data[0])) || ($field['scope'] && array_key_exists($field['scope'], $fields_data)))
     {
@@ -2567,7 +2567,7 @@ class Piklist_Form
    * @static
    * @since 1.0
    */
-  public static function template_shortcode($attributes, $content = '', $tag)
+  public static function template_shortcode($attributes, $content, $tag)
   {
     extract(shortcode_atts(array(
       'label_tag' => true
@@ -3182,7 +3182,7 @@ class Piklist_Form
 
       return false;
     }
-    
+
     $fields_data = $check['fields_data'];
 
     // Handle normal file uploads
@@ -3435,7 +3435,7 @@ class Piklist_Form
               $object_ids[$context] = is_array($object_ids[$context]) ? $object_ids[$context] : array($object_ids[$context]);
               array_push($object_ids[$context], $result_id);
             }
-            
+
             if ($scope == 'user' && isset($object['signon']))
             {
               if ($result_id)
@@ -3748,7 +3748,7 @@ class Piklist_Form
         foreach ($fields as &$field)
         {
           $allowed = $field['role'] === null || $field['capability'] === null;
-          
+
           if (!$allowed)
           {
             $allowed = current_user_can('manage_options');
@@ -3797,7 +3797,7 @@ class Piklist_Form
 
         unset($field);
       }
-      
+
       /**
        * piklist_save_field
        * Fires after fields have been saved
@@ -3954,15 +3954,15 @@ class Piklist_Form
                     ,'user_password' => $object['user_pass']
                     ,'remember' => $object['rememberme']
                   ), is_ssl());
-           
+
           if (!is_wp_error($user))
           {
             $id = $user->ID;
           }
-          
+
           break;
         }
-      
+
         $re_auth_cookie = false;
 
         if (isset($object['user_pass']) && empty($object['user_pass']))

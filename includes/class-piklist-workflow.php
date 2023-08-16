@@ -312,7 +312,7 @@ class Piklist_Workflow
     {
       return false;
     }
-    
+
     foreach (self::$workflows as $flow => $workflows)
     {
       uasort($workflows, array('piklist', 'sort_by_data_order'));
@@ -369,7 +369,7 @@ class Piklist_Workflow
               $tab = piklist::slug($workflow['data']['title'], 'UTF-8');
               $data = $workflow['data'];
             }
-            
+
             if (isset(self::$sub_workflows[$flow][$tab]))
             {
               $workflow['parts'] = self::$sub_workflows[$flow][$tab];
@@ -410,7 +410,7 @@ class Piklist_Workflow
 
               $workflow['parts'] = array_values($workflow['parts']);
             }
-            
+
             if ($workflow['data']['active'])
             {
               $active = $workflow;
@@ -448,17 +448,17 @@ class Piklist_Workflow
           }
         }
 
-        if (isset($data)) 
+        if (isset($data))
         {
-          if (empty(self::$workflow['workflows'][0]['data']['layout'])) 
+          if (empty(self::$workflow['workflows'][0]['data']['layout']))
           {
             self::$workflow['layout'] = 'tab';
-          } 
-          else 
+          }
+          else
           {
             self::$workflow['layout'] = self::$workflow['workflows'][0]['data']['layout'];
           }
-          
+
           self::$workflow = array(
             'flow' => $flow
             ,'tab' => $tab
@@ -758,7 +758,7 @@ class Piklist_Workflow
    * @static
    * @since 1.0
    */
-  public static function shortcode($attributes, $content = '', $tag)
+  public static function shortcode($attributes, $content, $tag)
   {
     extract(shortcode_atts(array(
       'flow' => null
